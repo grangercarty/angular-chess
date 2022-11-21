@@ -9,6 +9,16 @@ export class ChessTileComponent implements OnInit {
 
   x = 1;
   y = 1;
+  selected = false;
+  backgroundColor = "blue";
+
+  selectTile(): void {
+    this.selected = !this.selected;
+    if (this.selected) {
+      this.backgroundColor = "yellow";
+    }
+    else {this.backgroundColor = "blue"}
+  }
 
   constructor() { }
 
