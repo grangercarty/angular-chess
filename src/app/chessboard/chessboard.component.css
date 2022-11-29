@@ -11,6 +11,7 @@
     width: 50px;
     border-style: solid;
     position: absolute;
+    text-align: center;
 }
 
 .tile.selected {

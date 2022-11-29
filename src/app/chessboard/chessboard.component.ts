@@ -12,7 +12,10 @@ export class ChessboardComponent implements OnInit {
   selectedTile?: ChessTile;
 
   onSelect(tile: ChessTile): void {
-    this.selectedTile = tile;
+    if (tile === this.selectedTile) {
+      this.selectedTile = undefined;
+    }
+    else {this.selectedTile = tile;}
   }
 
   getHorizontalShift(tile: ChessTile): string {
@@ -21,6 +24,13 @@ export class ChessboardComponent implements OnInit {
 
   getVerticalShift(tile: ChessTile): string {
     return `${tile.y*50}px`;
+  }
+
+  getChessPiece(tile: ChessTile): string {
+    if (tile.piece) {
+      return `${tile.piece.color}\n${tile.piece.type}`;
+    }
+    else {return "";}
   }
 
   buildBoard(): void {
@@ -40,6 +50,7 @@ export class ChessboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildBoard();
+    this.chessBoard[0][4].piece = {color: "Black", type: "King"}
   }
 
 }

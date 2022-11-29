@@ -7,7 +7,7 @@
                 [style.top]="getVerticalShift(tile)"
                 [style.left]="getHorizontalShift(tile)"
                 (click)="onSelect(tile)">
-                    {{tile.x}}, {{tile.y}}
+                    {{getChessPiece(tile)}}
                 </div>
             </li>
         </ul>
