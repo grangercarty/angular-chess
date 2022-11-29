@@ -8,16 +8,31 @@ import { ChessTile } from 'src/app/models/ChessTile';
 })
 export class ChessboardComponent implements OnInit {
 
-  chessBoard!: ChessTile[];
+  chessBoard!: ChessTile[][];
+  selectedTile?: ChessTile;
+
+  onSelect(tile: ChessTile): void {
+    this.selectedTile = tile;
+  }
+
+  getHorizontalShift(tile: ChessTile): string {
+    return `${tile.x*50}px`;
+  }
+
+  getVerticalShift(tile: ChessTile): string {
+    return `${tile.y*50}px`;
+  }
 
   buildBoard(): void {
     this.chessBoard = [];
-    let x=1;
-    for (x; x<9; x++) {
-      let y=1;
-      for (y; y<9; y++) {
-        this.chessBoard.push({x:x, y:y});
+    let y=1;
+    for (y; y<9; y++) {
+      var tileRow: ChessTile[] = [];
+      let x=1;
+      for (x; x<9; x++) {
+        tileRow.push({x:x, y:y});
       }
+      this.chessBoard.push(tileRow);
     }
   }
 

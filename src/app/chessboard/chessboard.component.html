@@ -1,1 +1,15 @@
-<p>{{chessBoard}}</p>
+<ul id="chessboard">
+    <li *ngFor="let tileRow of chessBoard">
+        <ul class="row">
+            <li *ngFor="let tile of tileRow">
+                <div class="tile"
+                [class.selected]="tile===selectedTile"
+                [style.top]="getVerticalShift(tile)"
+                [style.left]="getHorizontalShift(tile)"
+                (click)="onSelect(tile)">
+                    {{tile.x}}, {{tile.y}}
+                </div>
+            </li>
+        </ul>
+    </li>
+</ul>
