@@ -17,3 +17,7 @@
 .tile.selected {
     background-color: green;
 }
+
+.tile.legalMove {
+    background-color: yellow;
+}

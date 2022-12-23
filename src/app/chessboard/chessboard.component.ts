@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessTile } from 'src/app/models/ChessTile';
+import { MoveFinderService } from '../services/move-finder.service';
 
 @Component({
   selector: 'app-chessboard',
@@ -10,12 +11,24 @@ export class ChessboardComponent implements OnInit {
 
   chessBoard!: ChessTile[][];
   selectedTile?: ChessTile;
+  legalMoves!: ChessTile[];
 
   onSelect(tile: ChessTile): void {
-    if (tile === this.selectedTile) {
+    if (this.legalMoves.indexOf(tile)>-1 && this.selectedTile) {
+      tile.piece = this.selectedTile.piece;
+      this.selectedTile.piece = undefined;
       this.selectedTile = undefined;
+      this.resetLegalMoves();
     }
-    else {this.selectedTile = tile;}
+    else if (tile === this.selectedTile) {
+      this.selectedTile = undefined;
+      this.resetLegalMoves();
+    }
+    else {
+      this.selectedTile = tile;
+      this.resetLegalMoves;
+      this.legalMoves = this.moveFinder.findMoves(tile, this);
+    }
   }
 
   getHorizontalShift(tile: ChessTile): string {
@@ -35,22 +48,33 @@ export class ChessboardComponent implements OnInit {
 
   buildBoard(): void {
     this.chessBoard = [];
-    let y=1;
-    for (y; y<9; y++) {
-      var tileRow: ChessTile[] = [];
-      let x=1;
-      for (x; x<9; x++) {
+    let x=0;
+    for (x; x<8; x++) {
+      let tileRow: ChessTile[] = [];
+      let y=0;
+      for (y; y<8; y++) {
         tileRow.push({x:x, y:y});
       }
       this.chessBoard.push(tileRow);
     }
   }
 
-  constructor() { }
+  resetLegalMoves(): void {
+    this.legalMoves = [];
+  }
+
+  getTile(x:number, y:number): ChessTile {
+    return this.chessBoard[x][y];
+  }
+
+  constructor(private moveFinder: MoveFinderService) { }
 
   ngOnInit(): void {
     this.buildBoard();
-    this.chessBoard[0][4].piece = {color: "Black", type: "King"}
+    this.resetLegalMoves();
+    this.getTile(4,0).piece = {color: "Black", type: "King"}
+    this.getTile(1,7).piece = {color: "White", type: "Knight"}
+    this.getTile(2,0).piece = {color: "Black", type: "Bishop"}
   }
 
 }
