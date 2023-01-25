@@ -72,9 +72,10 @@ export class ChessboardComponent implements OnInit {
   ngOnInit(): void {
     this.buildBoard();
     this.resetLegalMoves();
-    this.getTile(4,0).piece = {color: "Black", type: "King"}
-    this.getTile(1,7).piece = {color: "White", type: "Knight"}
-    this.getTile(2,0).piece = {color: "Black", type: "Bishop"}
+    this.getTile(4,0).piece = {color: "Black", type: "King"};
+    this.getTile(1,7).piece = {color: "White", type: "Knight"};
+    this.getTile(2,0).piece = {color: "Black", type: "Bishop"};
+    this.getTile(7,7).piece = {color: "White", type: "Rook"};
   }
 
 }
