@@ -102,5 +102,8 @@
       }
     }
   },
-  "defaultProject": "angular-chess"
+  "defaultProject": "angular-chess",
+  "cli": {
+    "analytics": false
+  }
 }
