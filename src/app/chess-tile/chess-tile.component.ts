@@ -5,6 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './chess-tile.component.html',
   styleUrls: ['./chess-tile.component.css']
 })
+
+// THIS COMPONENT IS CURRENTLY NOT BEING USED
+
 export class ChessTileComponent implements OnInit {
 
   x = 1;

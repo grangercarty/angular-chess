@@ -20,6 +20,9 @@ export class MoveFinderService {
     else if (tile.piece?.type === "Rook") {
       return this.findRookMoves(tile, board);
     }
+    else if (tile.piece?.type === "Queen") {
+      return this.findBishopMoves(tile, board).concat(this.findRookMoves(tile, board));
+    }
     else {
       return [];
     }

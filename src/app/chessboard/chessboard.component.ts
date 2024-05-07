@@ -12,6 +12,7 @@ export class ChessboardComponent implements OnInit {
   chessBoard!: ChessTile[][];
   selectedTile?: ChessTile;
   legalMoves!: ChessTile[];
+  colorToMove = "White";
 
   onSelect(tile: ChessTile): void {
     if (this.legalMoves.indexOf(tile)>-1 && this.selectedTile) {
@@ -67,6 +68,15 @@ export class ChessboardComponent implements OnInit {
     return this.chessBoard[x][y];
   }
 
+  changeColorToMove(): void {
+    if (this.colorToMove === "White") {
+      this.colorToMove = "Black";
+    }
+    else {
+      this.colorToMove = "White";
+    }
+  }
+
   constructor(private moveFinder: MoveFinderService) { }
 
   ngOnInit(): void {
@@ -76,6 +86,7 @@ export class ChessboardComponent implements OnInit {
     this.getTile(1,7).piece = {color: "White", type: "Knight"};
     this.getTile(2,0).piece = {color: "Black", type: "Bishop"};
     this.getTile(7,7).piece = {color: "White", type: "Rook"};
+    this.getTile(3,0).piece = {color: "Black", type: "Queen"};
   }
 
 }
