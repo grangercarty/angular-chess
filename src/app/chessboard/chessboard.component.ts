@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessTile } from 'src/app/models/ChessTile';
 import { MoveFinderService } from '../services/move-finder.service';
+import { ChessPiece } from '../models/ChessPiece';
 
 @Component({
   selector: 'app-chessboard',
@@ -11,24 +12,29 @@ export class ChessboardComponent implements OnInit {
 
   chessBoard!: ChessTile[][];
   selectedTile?: ChessTile;
-  legalMoves!: ChessTile[];
+  selectedPieceMoves!: ChessTile[];
+  allPieces!: ChessPiece[];
   colorToMove = "White";
 
   onSelect(tile: ChessTile): void {
-    if (this.legalMoves.indexOf(tile)>-1 && this.selectedTile) {
+    if (this.selectedPieceMoves.indexOf(tile)>-1 && this.selectedTile && this.selectedTile.piece) {
+      this.selectedTile.piece.moved = true;
       tile.piece = this.selectedTile.piece;
       this.selectedTile.piece = undefined;
       this.selectedTile = undefined;
-      this.resetLegalMoves();
+      this.resetPieceMoves();
+      this.changeColorToMove();
     }
     else if (tile === this.selectedTile) {
       this.selectedTile = undefined;
-      this.resetLegalMoves();
+      this.resetPieceMoves();
     }
     else {
       this.selectedTile = tile;
-      this.resetLegalMoves;
-      this.legalMoves = this.moveFinder.findMoves(tile, this);
+      this.resetPieceMoves;
+      if (tile.piece?.color === this.colorToMove) {
+        this.selectedPieceMoves = this.moveFinder.findMoves(tile, this);
+      }
     }
   }
 
@@ -60,8 +66,8 @@ export class ChessboardComponent implements OnInit {
     }
   }
 
-  resetLegalMoves(): void {
-    this.legalMoves = [];
+  resetPieceMoves(): void {
+    this.selectedPieceMoves = [];
   }
 
   getTile(x:number, y:number): ChessTile {
@@ -77,16 +83,79 @@ export class ChessboardComponent implements OnInit {
     }
   }
 
+  newGame(): void {
+    this.allPieces = [];
+    let x=0;
+    let currentTile = this.getTile(0,0);
+    for (x; x<8; x++) {
+      currentTile = this.getTile(x,1)
+      currentTile.piece = {type: "Pawn", color: "Black", moved: false, location: currentTile, legalMoves: []};
+      this.allPieces.push(currentTile.piece);
+    }
+    x=0;
+    for (x; x<8; x++) {
+      currentTile = this.getTile(x,6)
+      currentTile.piece = {type: "Pawn", color: "White", moved: false, location: currentTile, legalMoves: []};
+      this.allPieces.push(currentTile.piece);
+    }
+    currentTile = this.getTile(0,0);
+    currentTile.piece = {type: "Rook", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(1,0);
+    currentTile.piece = {type: "Knight", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(2,0);
+    currentTile.piece = {type: "Bishop", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(3,0);
+    currentTile.piece = {type: "Queen", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(7,0);
+    currentTile.piece = {type: "Rook", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(6,0);
+    currentTile.piece = {type: "Knight", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(5,0);
+    currentTile.piece = {type: "Bishop", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(4,0);
+    currentTile.piece = {type: "King", color: "Black", moved: false, location: currentTile, legalMoves: []};
+    x=0;
+    for (x; x<8; x++) {
+      currentTile = this.getTile(x,0);
+      if (currentTile.piece) {
+        this.allPieces.push(currentTile.piece);
+      }
+    }
+    currentTile = this.getTile(0,7);
+    currentTile.piece = {type: "Rook", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(1,7);
+    currentTile.piece = {type: "Knight", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(2,7);
+    currentTile.piece = {type: "Bishop", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(3,7);
+    currentTile.piece = {type: "Queen", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(7,7);
+    currentTile.piece = {type: "Rook", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(6,7);
+    currentTile.piece = {type: "Knight", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(5,7);
+    currentTile.piece = {type: "Bishop", color: "White", moved: false, location: currentTile, legalMoves: []};
+    currentTile = this.getTile(4,7);
+    currentTile.piece = {type: "King", color: "White", moved: false, location: currentTile, legalMoves: []};
+    x=0;
+    for (x; x<8; x++) {
+      currentTile = this.getTile(x,7);
+      if (currentTile.piece) {
+        this.allPieces.push(currentTile.piece);
+      }
+    }
+  }
+
+  findAllMoves(): void {
+
+  }
+
   constructor(private moveFinder: MoveFinderService) { }
 
   ngOnInit(): void {
     this.buildBoard();
-    this.resetLegalMoves();
-    this.getTile(4,0).piece = {color: "Black", type: "King"};
-    this.getTile(1,7).piece = {color: "White", type: "Knight"};
-    this.getTile(2,0).piece = {color: "Black", type: "Bishop"};
-    this.getTile(7,7).piece = {color: "White", type: "Rook"};
-    this.getTile(3,0).piece = {color: "Black", type: "Queen"};
+    this.resetPieceMoves();
+    this.newGame()
   }
 
 }

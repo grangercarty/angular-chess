@@ -4,7 +4,7 @@
             <li *ngFor="let tile of tileRow">
                 <div class="tile"
                 [class.selected]="tile===selectedTile"
-                [class.legalMove]="legalMoves.indexOf(tile)>-1"
+                [class.legalMove]="selectedPieceMoves.indexOf(tile)>-1"
                 [style.top]="getVerticalShift(tile)"
                 [style.left]="getHorizontalShift(tile)"
                 (click)="onSelect(tile)">
