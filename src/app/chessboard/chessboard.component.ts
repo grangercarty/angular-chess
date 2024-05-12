@@ -27,9 +27,7 @@ export class ChessboardComponent implements OnInit {
       this.selectedTile.piece.location = tile;
       if (tile.piece) {
         let removedPiece = tile.piece;
-        let removedPieceIndex = this.allPieces.findIndex((piece: ChessPiece): boolean => {
-          return piece == removedPiece;
-        })
+        let removedPieceIndex = this.allPieces.indexOf(removedPiece);
         if (removedPieceIndex > -1) {
           this.allPieces.splice(removedPieceIndex,1);
         }
@@ -39,6 +37,7 @@ export class ChessboardComponent implements OnInit {
       this.selectedTile = undefined;
       this.resetPieceMoves();
       this.changeColorToMove();
+      this.moveFinder.findAllMoves(this);
     }
     else if (tile === this.selectedTile) {
       this.selectedTile = undefined;
@@ -47,8 +46,9 @@ export class ChessboardComponent implements OnInit {
     else {
       this.selectedTile = tile;
       this.resetPieceMoves;
-      if (tile.piece?.color === this.colorToMove) {
-        this.selectedPieceMoves = this.moveFinder.findMoves(tile, this);
+      if (tile.piece?.color === this.colorToMove && tile.piece.legalMoves) {
+        this.selectedPieceMoves = tile.piece.legalMoves;
+        // this.selectedPieceMoves = this.moveFinder.findMoves(tile, this);
       }
     }
   }
@@ -167,6 +167,7 @@ export class ChessboardComponent implements OnInit {
         this.getTile(x,y).piece = undefined;
       }
     }
+    this.moveFinder.findAllMoves(this);
   }
 
   constructor(private moveFinder: MoveFinderService) { }
