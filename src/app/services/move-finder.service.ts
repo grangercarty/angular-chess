@@ -7,6 +7,16 @@ import { ChessboardComponent } from 'src/app/chessboard/chessboard.component';
 })
 export class MoveFinderService {
   
+  findAllMoves(board: ChessboardComponent): void {
+    let i=0;
+    for (i; i < board.allPieces.length; i++) {
+      let currentTile = board.allPieces[i].location;
+      if (currentTile) {
+        board.allPieces[i].legalMoves = this.findMoves(currentTile, board);
+      }
+    }
+  }
+
   findMoves(tile: ChessTile, board: ChessboardComponent): ChessTile[] {
     if (tile.piece?.type === "King") {
       return this.findKingMoves(tile, board);
@@ -22,6 +32,9 @@ export class MoveFinderService {
     }
     else if (tile.piece?.type === "Queen") {
       return this.findBishopMoves(tile, board).concat(this.findRookMoves(tile, board));
+    }
+    else if (tile.piece?.type === "Pawn") {
+      return this.findPawnMoves(tile,board);
     }
     else {
       return [];
@@ -144,6 +157,41 @@ export class MoveFinderService {
         if ( (tile.x != x || tile.y != y) && this.legalSquare(x,y)
           && (this.squareOpen(tile, board.getTile(x,y)) !== "same")) {
             moves.push(board.getTile(x,y));
+        }
+      }
+    }
+    return moves;
+  }
+
+  findPawnMoves(tile: ChessTile, board: ChessboardComponent): ChessTile[] {
+    let moves: ChessTile[] = [];
+    let x=tile.x;
+    let y=tile.y;
+    if (tile.piece?.color === "White") {
+      if (this.legalSquare(x-1, y-1) && (this.squareOpen(tile, board.getTile(x-1,y-1)) === "different") ) {
+        moves.push(board.getTile(x-1,y-1));
+      }
+      if (this.legalSquare(x+1, y-1) && (this.squareOpen(tile, board.getTile(x+1,y-1)) === "different") ) {
+        moves.push(board.getTile(x+1,y-1));
+      }
+      if (this.legalSquare(x, y-1) && (this.squareOpen(tile, board.getTile(x,y-1)) === "open") ) {
+        moves.push(board.getTile(x,y-1));
+        if (y==6 && this.legalSquare(x, y-2) && (this.squareOpen(tile, board.getTile(x,y-2)) === "open") ) {
+          moves.push(board.getTile(x,y-2));
+        }
+      }
+    }
+    if (tile.piece?.color === "Black") {
+      if (this.legalSquare(x-1, y+1) && (this.squareOpen(tile, board.getTile(x-1,y+1)) === "different") ) {
+        moves.push(board.getTile(x-1,y+1));
+      }
+      if (this.legalSquare(x+1, y+1) && (this.squareOpen(tile, board.getTile(x+1,y+1)) === "different") ) {
+        moves.push(board.getTile(x+1,y+1));
+      }
+      if (this.legalSquare(x, y+1) && (this.squareOpen(tile, board.getTile(x,y+1)) === "open") ) {
+        moves.push(board.getTile(x,y+1));
+        if (y==1 && this.legalSquare(x, y+2) && (this.squareOpen(tile, board.getTile(x,y+2)) === "open") ) {
+          moves.push(board.getTile(x,y+2));
         }
       }
     }

@@ -18,6 +18,11 @@
     background-color: green;
 }
 
-.tile.legalMove {
+.tile.selectedPieceMove {
     background-color: yellow;
+}
+
+#newGame {
+    position: absolute;
+    top: 450px;
 }

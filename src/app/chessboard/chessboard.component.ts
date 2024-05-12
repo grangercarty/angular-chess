@@ -16,9 +16,24 @@ export class ChessboardComponent implements OnInit {
   allPieces!: ChessPiece[];
   colorToMove = "White";
 
+  //THIS FUNCTION IS FOR TESTING AND IS NOT CURRENTLY IN USE
+  displayPiece(piece: ChessPiece): string {
+    return `${piece.color} ${piece.type} ${piece.moved}`;
+  }
+
   onSelect(tile: ChessTile): void {
-    if (this.selectedPieceMoves.indexOf(tile)>-1 && this.selectedTile && this.selectedTile.piece) {
+    if (this.selectedPieceMoves.indexOf(tile)>-1 && this.selectedTile?.piece) {
       this.selectedTile.piece.moved = true;
+      this.selectedTile.piece.location = tile;
+      if (tile.piece) {
+        let removedPiece = tile.piece;
+        let removedPieceIndex = this.allPieces.findIndex((piece: ChessPiece): boolean => {
+          return piece == removedPiece;
+        })
+        if (removedPieceIndex > -1) {
+          this.allPieces.splice(removedPieceIndex,1);
+        }
+      }
       tile.piece = this.selectedTile.piece;
       this.selectedTile.piece = undefined;
       this.selectedTile = undefined;
@@ -85,6 +100,7 @@ export class ChessboardComponent implements OnInit {
 
   newGame(): void {
     this.allPieces = [];
+    this.colorToMove = "White"
     let x=0;
     let currentTile = this.getTile(0,0);
     for (x; x<8; x++) {
@@ -144,10 +160,13 @@ export class ChessboardComponent implements OnInit {
         this.allPieces.push(currentTile.piece);
       }
     }
-  }
-
-  findAllMoves(): void {
-
+    x=0
+    for (x; x<8; x++) {
+      let y=2;
+      for (y; y<6; y++) {
+        this.getTile(x,y).piece = undefined;
+      }
+    }
   }
 
   constructor(private moveFinder: MoveFinderService) { }
